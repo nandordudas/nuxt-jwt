@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+    branches:
+      - main
+
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+    branches:
+      - main
+
+concurrency:
+  cancel-in-progress: true
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+
+env:
+  NODE_OPTIONS: --max-old-space-size=6144
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-and-cache
+
+      - name: Install commitlint
+        run: pnpm install conventional-changelog-conventionalcommits commitlint@latest
+
+      - name: Validate current commit (last commit) with commitlint
+        if: github.event_name == 'push'
+        run: npx commitlint --last --verbose
+
+      - name: Validate PR commits with commitlint
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-and-cache
+
+      - name: Install
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm run lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-and-cache
+
+      - name: Install
+        run: pnpm install
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-and-cache
+
+      - name: Install
+        run: pnpm install
+
+      - name: Test
+        if: github.event_name == 'pull_request'
+        run: pnpm run test --coverage --changed ${{ github.event.pull_request.head.sha }}
+
+      - name: Test
+        if: github.event_name == 'push'
+        run: pnpm run test --coverage

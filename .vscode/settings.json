@@ -1,0 +1,91 @@
+{
+  "cSpell.words": [
+    "antfu",
+    "bradlc",
+    "crossws",
+    "eamodio",
+    "iconify",
+    "ifixit",
+    "mhutchie",
+    "nuxt",
+    "nuxtjs",
+    "orta",
+    "pinia",
+    "printenv",
+    "taze",
+    "usernamehw",
+    "vueuse",
+    "yoavbls"
+  ],
+  // Auto fix
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+  "editor.formatOnSave": false,
+  "eslint.runtime": "node",
+  // Enable the ESLint debugger if you are interested
+  "eslint.debug": false,
+  // Enable the ESlint flat config support
+  "eslint.experimental.useFlatConfig": true,
+  // Silent the stylistic rules in you IDE, but still auto fix them
+  "eslint.rules.customizations": [
+    {
+      "rule": "*-dangle",
+      "severity": "off"
+    },
+    {
+      "rule": "*-indent",
+      "severity": "off"
+    },
+    {
+      "rule": "*-newline",
+      "severity": "off"
+    },
+    {
+      "rule": "*-order",
+      "severity": "off"
+    },
+    {
+      "rule": "*-spaces",
+      "severity": "off"
+    },
+    {
+      "rule": "*-spacing",
+      "severity": "off"
+    },
+    {
+      "rule": "*quotes",
+      "severity": "off"
+    },
+    {
+      "rule": "*semi",
+      "severity": "off"
+    },
+    {
+      "rule": "format/*",
+      "severity": "off"
+    },
+    {
+      "rule": "style/*",
+      "severity": "off"
+    }
+  ],
+  // Enable ESLint for all supported languages
+  "eslint.validate": [
+    "css",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "markdown",
+    "toml",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "yaml"
+  ],
+  // Disable the default formatter, use ESLint instead
+  "prettier.enable": false
+}
