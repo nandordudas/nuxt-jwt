@@ -11,6 +11,16 @@ const httpsServerFiles: DevServerHttps = {
 }
 
 export default defineNuxtConfig({
+  $development: {
+    nitro: {
+      devDatabase: {
+        default: {
+          connector: 'sqlite',
+        },
+      },
+    },
+  },
+
   app: {
     head: {
       titleTemplate: '%s - Nuxt 3',
@@ -44,8 +54,17 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
+  nitro: {
+    experimental: {
+      database: true,
+      tasks: true,
+    },
+  },
+
   runtimeConfig: {
+    jwtAccessTokenExpires: '15m',
     jwtAccessTokenSecret: '',
+    jwtRefreshTokenExpires: '7d',
     jwtRefreshTokenSecret: '',
   },
 

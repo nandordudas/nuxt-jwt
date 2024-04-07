@@ -5,11 +5,9 @@ const authStore = useAuthStore()
 </script>
 
 <template>
-  <div>
+  <div class="grid place-items-center h-screen">
     <h1>Register</h1>
 
-    <UButton @click="authStore.register">
-      Register
-    </UButton>
+    <AuthRegister :loading="authStore.loading" @submit="authStore.register" />
   </div>
 </template>

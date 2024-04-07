@@ -1,11 +1,10 @@
 import { consola } from 'consola'
 
-// TODO: handle errors
+export default defineEventHandler((event) => {
+  const token = getCookie(event, 'token')
 
-export default defineWrappedResponseHandler(async (event) => {
-  setResponseHeader(event, 'Accept', 'application/vnd.api+json')
+  if (!token)
+    return consola.warn('No token found')
 
-  consola.log('context', event.context)
-
-  return { errors: null }
+  deleteCookie(event, 'token')
 })

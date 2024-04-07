@@ -87,5 +87,9 @@
     "yaml"
   ],
   // Disable the default formatter, use ESLint instead
-  "prettier.enable": false
+  "prettier.enable": false,
+  "tailwindCSS.classAttributes": [
+    "active-class",
+    "inactive-class"
+  ]
 }

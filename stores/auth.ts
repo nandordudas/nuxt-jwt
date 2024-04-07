@@ -1,48 +1,114 @@
+import { consola } from 'consola'
+
 export const useAuthStore = defineStore('auth', () => {
-  const { $api } = useNuxtApp()
+  const loading = shallowRef(false)
+  const user = shallowRef<Nullable<User>>(null)
+  const token = shallowRef<Nullable<string>>(null)
 
-  const user = ref<Nullable<User>>(null)
-  const tokens = ref<Nullable<Token.Data>>(null)
+  const isAuthenticated = computed(() => !!token.value)
 
-  const isAuthenticated = computed(() => !!tokens.value)
+  async function register(user: UserWithPassword): Promise<void> {
+    loading.value = true
 
-  async function register(): Promise<void> {
+    const toast = useToast()
+
     try {
-      const body = { email: 'john.doe@mail.com', password: 'password' } as User
+      await $fetch('/api/auth/register', {
+        body: user,
+        method: 'POST',
+      })
 
-      await $api('/api/auth/register', { body, method: 'POST' })
+      toast.add({
+        color: 'green',
+        title: 'Account created',
+      })
+
+      await navigateTo('/login', {
+        replace: true,
+      })
     }
     catch (error) {
-      console.error(error)
+      consola.error(error)
+
+      toast.add({
+        color: 'red',
+        title: 'Something went wrong',
+      })
     }
+
+    loading.value = false
   }
 
-  async function login(): Promise<void> {
-    try {
-      const body = { email: 'john.doe@mail.com', password: 'password' } as User
+  async function login(user: UserWithPassword): Promise<void> {
+    loading.value = true
 
-      await $api('/api/auth/login', { body, method: 'POST' })
+    const toast = useToast()
+
+    try {
+      await $fetch('/api/auth/login', {
+        body: user,
+        method: 'POST',
+      })
+
+      toast.add({
+        color: 'green',
+        title: 'Logged in',
+      })
+
+      await navigateTo('/dashboard', {
+        replace: true,
+      })
     }
     catch (error) {
-      console.error(error)
+      consola.error(error)
+
+      toast.add({
+        color: 'red',
+        title: 'Something went wrong',
+      })
     }
+
+    loading.value = false
   }
 
   async function logout(): Promise<void> {
+    loading.value = true
+
+    const toast = useToast()
+
     try {
-      await $fetch('/api/auth/logout', { method: 'POST' })
+      await $fetch('/api/auth/logout', {
+        method: 'POST',
+      })
+
+      toast.add({
+        color: 'green',
+        title: 'Logged out',
+      })
+
+      await navigateTo('/', {
+        replace: true,
+      })
     }
     catch (error) {
-      console.error(error)
+      consola.error(error)
+
+      toast.add({
+        color: 'red',
+        title: 'Something went wrong',
+      })
     }
+
+    loading.value = false
   }
 
   return {
     isAuthenticated,
+    loading,
     login,
     logout,
     register,
-    tokens,
+    token,
     user,
   }
 })

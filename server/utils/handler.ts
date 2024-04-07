@@ -5,7 +5,7 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
   handler: EventHandler<T, D>,
 ): EventHandler<T, D> {
   return defineEventHandler<T>(async (event) => {
-    consola.log(`${event.method} ${event.node.req.url}`)
+    consola.log(`[${event.method}] ${event.node.req.url}`)
 
     try {
       const response = await handler(event)
@@ -13,7 +13,7 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
       return { response }
     }
     catch (error) {
-      return { error }
+      return { errors: [error] }
     }
   })
 }
